@@ -32,6 +32,12 @@ L1点距离，通过公式_L1_distance = _L1_ratio * ground_speed得到。
 
 ​		获取计算出的偏航角期望。
 
+```c
+    float nav_bearing() {
+        return matrix::wrap_pi(_nav_bearing);
+    }
+```
+
 
 
 #### navigate_waypoints
@@ -49,23 +55,38 @@ L1点距离，通过公式_L1_distance = _L1_ratio * ground_speed得到。
 
 **代码**
 
-计算到目标的航向
+- 计算到目标的航向
 
-```c
-_target_bearing = get_bearing_to_next_waypoint(vector_curr_position(0), vector_curr_position(1), vector_B(0), vector_B(1));
-```
+  ```c
+  _target_bearing = get_bearing_to_next_waypoint(vector_curr_position(0), vector_curr_position(1), vector_B(0), vector_B(1));
+  ```
 
-计算L1
+- 计算L1
 
-```c
-_L1_distance = _L1_ratio * ground_speed;
-```
+  ```c
+  _L1_distance = _L1_ratio * ground_speed;
+  ```
 
+- 计算向量AB
 
+  计算由A到B的向量，并归一化。
 
+  ```c
+  Vector2f vector_AB = get_local_planar_vector(vector_A, vector_B);
+  vector_AB.normalize();
+  ```
 
+- 计算向量AP
 
+  计算由A到vector_curr_position的向量。
 
+  ```c
+  Vector2f vector_A_to_airplane = get_local_planar_vector(vector_A, vector_curr_position);
+  ```
+
+- 计算AB与AP向量形成的夹角
+
+  
 
 
 
@@ -86,6 +107,8 @@ else if (position_sp_type == position_setpoint_s::SETPOINT_TYPE_POSITION ||
 ```
 
 
+
+## 测试记录
 
 无人机任务规划为：起飞、给定垂直起飞点、设置第一个航点、设置第二、三、四个航点。
 
