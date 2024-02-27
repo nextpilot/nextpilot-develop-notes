@@ -214,3 +214,37 @@ else if (position_sp_type == position_setpoint_s::SETPOINT_TYPE_LOITER) {
 
 
 
+### offboard-前期
+
+当进入offboard后，只给current航点赋值。
+
+pos_sp_prev: 0
+
+pos_sp_curr: offboard赋值
+
+pos_sp_next: 0
+
+
+
+```c++
+_l1_control.navigate_waypoints(prev_wp, curr_wp, curr_pos, nav_speed_2d);
+```
+
+
+
+previous航点会设置为current一样的经纬度
+
+prev_wp: 29.3833374, 104.5890717
+
+
+
+### offboard-修改无法保持当前航向的问题
+
+当不指定航迹角时，记录当前拍航迹角，沿着航迹角在无人机当前位置前后1km生成引导航点，后方为previous航点，前方为current航点。
+
+prev_wp: 29.387360613184097, 104.58542414393699
+
+curr_wp: 29.374925858686648, 104.57051011648359
+
+
+
