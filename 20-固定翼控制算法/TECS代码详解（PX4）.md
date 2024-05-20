@@ -6,6 +6,10 @@
 
 TECS最重要的两个函数就是update_vehicle_state_estimates()、update_pitch_throttle()。
 
+
+
+运行频率默认50Hz。
+
 ## TECS类详解
 
 ### 主要函数成员变量
@@ -164,7 +168,7 @@ _SKE_weighting = constrain(_SKE_weighting, 0.f, 1.f);
 
 ​		如果实参传入的天向速度有效则使用传入值；如果实参传入值无效，则通过`updateHeightRateSetpoint()`函数计算出一个天向速度。
 
-#### updateHeightRateSetpoint
+#### updateHeightRateSetpoint()
 
 根据期望高度以及当前高度，计算期望天向速度（_hgt_rate_setpoint）。
 
@@ -197,7 +201,7 @@ _hgt_rate_setpoint = constrain(_hgt_rate_setpoint, -_max_sink_rate, _max_climb_r
 
 
 
-#### _update_energy_estimates
+#### _update_energy_estimates()
 
 更新能量估计。
 
@@ -310,7 +314,7 @@ _SKE_rate = _tas_state * _tas_rate_filtered;   // kinetic energy rate of change
 
 
 
-#### _update_throttle_setpoint
+#### _update_throttle_setpoint()
 
 根据总能量需求计算期望油门。
 
@@ -330,20 +334,23 @@ _SKE_rate = _tas_state * _tas_rate_filtered;   // kinetic energy rate of change
    STE_rate_setpoint = constrain(STE_rate_setpoint, _STE_rate_min, _STE_rate_max);
    ```
 
+   - \_STE_rate_max：表示以最大爬升率（最大油门条件下）飞行时总能量的变化率；
+   - \_STE_rate_min：表示以最小下沉率（最小油门条件下）飞行时总能量变化率；
+   
    二者在`TECS::_update_STE_rate_lim()`函数中计算如下：
-
+   
    ```c++
    _STE_rate_max = _max_climb_rate * CONSTANTS_ONE_G;
    _STE_rate_min = -_min_sink_rate * CONSTANTS_ONE_G;
    ```
-
+   
    在这里`_max_climb_rate`对应的参数是FW_T_CLMB_MAX，`_min_sink_rate`对应的参数是FW_T_SINK_MIN。
 
 
 
 **预估一个油门（比例控制）**
 
-在巡航油门基础上，根据能量变化率预估一个油门，当期望能量变化率是增大时，就在巡航油门和最大油门之间计算，当期望能量变化率是减小是，就在最小油门和巡航油门之间计算。
+在巡航油门基础上，根据能量变化率预估一个油门，当期望能量变化率是增大时，就在巡航油门和最大油门之间计算，当期望能量变化率是减小时，就在最小油门和巡航油门之间计算。
 
 ```c++
 if (STE_rate_setpoint >= 0) { // 油门在巡航值与最大值之间
@@ -393,7 +400,7 @@ throttle_setpoint += _throttle_integ_state;
 
 
 
-#### _update_pitch_setpoint
+#### _update_pitch_setpoint()
 
 根据能量平衡需求计算期望俯仰角。
 
