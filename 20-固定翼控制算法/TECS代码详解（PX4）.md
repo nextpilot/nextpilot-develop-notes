@@ -1,14 +1,10 @@
 # TECS源码分析（PX4）
 
+## 简介
 
+TECS做为固定翼控制模块中的一个类，其提供了必要的函数接口以供调用。
 
-## 框架
-
-TECS最重要的两个函数就是update_vehicle_state_estimates()、update_pitch_throttle()。
-
-
-
-运行频率默认50Hz。
+TECS最重要的两个函数就是update_vehicle_state_estimates()、update_pitch_throttle()，前者获取无人机状态、指令输入并进行估计与更新，后置生成俯仰与油门指令。
 
 ## TECS类详解
 
@@ -49,8 +45,6 @@ TECS最重要的两个函数就是update_vehicle_state_estimates()、update_pitc
 由updateHeightRateSetpoint()函数和_update_height_rate_setpoint()函数更改。
 
 ### 函数讲解
-
-
 
 #### update_vehicle_state_estimates()
 
